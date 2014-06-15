@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--     <string name="hello"> ..\u00D8 .. \u0905 sss Hello World, QuicklyScrollListViewActivity!Todo!</string>
+    <string name="app_name"> ..\u00D8 .. \u0905 sss QuicklyScrollListView Todo</string> -->
+    <string name="hello">Hello World, QuicklyScrollListViewActivity!Todo!</string>
+    <string name="app_name"> QuicklyScrollListView Todo</string>
+    <string name="no_todos">Currently there are no Todo items maintained</string>
+    <string name="menu_insert">Add Item</string>
+    <string name="menu_delete">Delete Todo</string>
+    <string name="todo_summary">Summary</string>
+    <string name="todo_description">Delete Todo</string>
+    <string name="todo_edit_summary">Summary</string>
+    <string name="todo_edit_description">Description</string>
+    <string name="todo_edit_confirm">Confirm</string>
+    
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+
+     
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item >Home</item>
+        <item >Find People</item>
+        <item >Photos</item>
+        <item >Communities</item>
+        <item >Pages</item>
+        <item >What\'s Hot</item>
+    </string-array>
+     
+    <!-- Nav Drawer List Item Icons -->
+    <!-- Keep them in order as the titles are in -->
+    <array name="nav_drawer_icons">
+        <item>@android:drawable/arrow_up_float</item>
+        <item>@android:drawable/arrow_down_float</item>
+        <item>@android:drawable/btn_minus</item>
+        <item>@android:drawable/btn_plus</item>
+        <item>@android:drawable/btn_star</item>
+        <item>@android:drawable/ic_media_play</item>
+    </array>
+     
+    <!-- Content Description -->
+    <string name="desc_list_item_icon">Item Icon</string>
+
+</resources>
