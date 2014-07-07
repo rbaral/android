@@ -2,15 +2,25 @@ package info.androidhive.slidingmenu;
 
 import info.androidhive.slidingmenu.adapter.NavDrawerListAdapter;
 import info.androidhive.slidingmenu.model.NavDrawerItem;
+import info.androidhive.slidingmenu.model.Place;
+import info.androidhive.slidingmenu.model.Weather;
+import info.androidhive.slidingmenu.provider.YahooClient;
+import info.androidhive.slidingmenu.util.DownloadWebPageTask;
+import info.androidhive.slidingmenu.util.StringToDocConverter;
+import info.androidhive.slidingmenu.util.YahooParser;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ListFragment;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 
 public class MainActivity extends Activity {
 	private DrawerLayout mDrawerLayout;
@@ -166,9 +177,13 @@ public class MainActivity extends Activity {
 		// update the main content by replacing fragments
 		Fragment fragment = null;
 		ItemListFragment fragmentList=null;
+		Log.d("Switching position", "Position is:"+position);
+		String zip = "60202";
+		YahooClient yahooClient=new YahooClient();
 		switch (position) {
 		case 0:
 			fragment = new HomeFragment();
+			//((HomeFragment)fragment).setCityResultList(yahooClient.getCityList("ca"));
 			break;
 		case 1:
 			fragment = new FindPeopleFragment();
@@ -178,6 +193,40 @@ public class MainActivity extends Activity {
 			break;
 		case 3:
 			fragment = new CommunityFragment();
+			
+			// Gets the URL from the UI's text field.
+	        //String stringUrl = "http://where.yahooapis.com/v1/places.q(c%2A);count=10?appid=ptuazgTV34GNyUzhFWdFZyxcCQuMaPafb5F8aPvgXcocjAqCG7imJ9JzI4bbTH8k6XiQ3jY";
+	        String weatherUrl="http://weather.yahooapis.com/forecastrss?w=2502265";
+	        String placeUrl="http://where.yahooapis.com/v1/places.q(lumbini);count=10?appid=ptuazgTV34GNyUzhFWdFZyxcCQuMaPafb5F8aPvgXcocjAqCG7imJ9JzI4bbTH8k6XiQ3jY";
+	        //stringUrl="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D23424911&format=json&diagnostics=true&callback=";
+	        ConnectivityManager connMgr = (ConnectivityManager) 
+	            getSystemService(Context.CONNECTIVITY_SERVICE);
+	        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+	        if (networkInfo != null && networkInfo.isConnected()) {
+	            AsyncTask weatherTask=new DownloadWebPageTask().execute(weatherUrl);
+	            AsyncTask placeTask=new DownloadWebPageTask().execute(placeUrl);
+	            try {
+	            	String weatherXML=weatherTask.get().toString();
+	            	String placeXML=placeTask.get().toString();
+					Log.d("Swa","result is:"+weatherTask.get().toString());
+	            	Weather weatherResult = YahooParser.parseWeather(StringToDocConverter.convertStringToDocument(weatherXML.toString()));
+	            	Place placeResult=YahooParser.parsePlaces(StringToDocConverter.convertStringToDocument(placeXML.toString()));
+	        		Bundle bundle=new Bundle();
+					bundle.putString("weatherResult", weatherResult.toString());
+					bundle.putString("placeResult", placeResult.toString());
+					fragment.setArguments(bundle);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        } else {
+	            /*textView.setText("No network connection available.");
+	            fragment.*/
+	        }
+			
 			break;
 		case 4:
 			fragment = new PagesFragment();
